@@ -47,13 +47,13 @@ constexpr const char* AP_SSID = "HydroPing-Wi-Fi";
 constexpr const char* AP_PASS = "";
 
 
-/* ---------- Persisit through deep sleep ---------- */
+/* ---------- Persist through deep sleep ---------- */
 RTC_DATA_ATTR bool isDisconnected = false;
 RTC_DATA_ATTR bool inSetupMode = false;
 RTC_DATA_ATTR uint64_t deepSleepTimeOut = 12ULL * 60ULL * 60ULL * 1000000ULL;  // default: 12h
 
 
-/* ---------- LIS3DH functions ---------- */
+/* ---------- Peripheral functions ---------- */
 // I. writeRegister
 // input (uint8_t, uint8_t): seletcted register, specific value
 // output (void): use I2C to write a configuration to the chip at specific register
@@ -75,9 +75,9 @@ uint8_t readRegister(uint8_t reg) {
   return Wire.read();
 }
 
-// II. initLIS3DH
+// III. initLIS3DH
 // input (): N/A
-// output (void): initialize the chip
+// output (void): initialize peripheral chip
 void initLIS3DH() {
   // writeRegister(0x20, 0x47); // CTRL_REG1: 50 Hz, XYZ enabled
   // writeRegister(0x21, 0x40); // CTRL_REG2: High-pass filter to click
@@ -98,11 +98,11 @@ void initLIS3DH() {
   writeRegister(0x30, 0x2A);  // INT1_CFG: enable XH, YH, ZH
   writeRegister(0x32, 0x47);  // INT1_THS: threshold ~0.5g (adjust later)
   writeRegister(0x33, 0x05);  // INT1_DURATION: 1 count (20ms at 50Hz)
-  (void)readRegister(0x31);
+  (void)readRegister(0x31);   // read register 0x31 to confirm writes
 }
 
 
-/* ---------- WiFi function ---------- */
+/* ---------- WiFi functions ---------- */
 // I. startAP
 // input (): N/A
 // output (void): activate setup mode, start async webserver, listen and process
@@ -325,9 +325,9 @@ void setup() {
   delay(500);
 
   Wire.begin(SDA_PIN, SCL_PIN); // initialize I2C
-  pinMode(LIS3DH_INT1_PIN, INPUT_PULLUP); // activate preferral
+  pinMode(LIS3DH_INT1_PIN, INPUT_PULLUP); // activate Peripheral
   delay(20);
-  initLIS3DH(); // initialize preferral
+  initLIS3DH(); // initialize Peripheral
   delay(20);
 
   // deep sleep interrupted, triggered by specififc pin
