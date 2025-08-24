@@ -332,7 +332,7 @@ void setup() {
   
   // loop cycle allwed during setup mode
   if (wokeFromShake && !inSetupMode) {
-    inSetupMode = true;
+    inSetupMode = true; // activate setup mode
     startAP();
     delay(200);
     unsigned long startTime = millis();
@@ -340,8 +340,8 @@ void setup() {
       delay(100);
     }
     stopAP();
-    inSetupMode = false;
-    scheduleNextSleep();
+    inSetupMode = false; // deactivate setup mode
+    scheduleNextSleep(); // go back to sleep
   }
 
   // communicate to backend & go back to sleep
