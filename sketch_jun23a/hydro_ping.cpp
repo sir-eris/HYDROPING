@@ -319,12 +319,9 @@ void scheduleNextSleep() {
 // input (): N/A
 // output (void): initialize hardware layers, communicate to backend & go back to sleep, allow setup mode loop cycle
 void setup() {
-  Serial.begin(115200);
-  // while (!Serial) delay(10);
-  // Serial.setDebugOutput(true);
-  delay(500);
-
+  delay(20);
   Wire.begin(SDA_PIN, SCL_PIN); // initialize I2C
+  delay(20);
   pinMode(LIS3DH_INT1_PIN, INPUT_PULLUP); // activate Peripheral
   delay(20);
   initLIS3DH(); // initialize Peripheral
